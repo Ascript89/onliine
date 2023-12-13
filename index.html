@@ -8,6 +8,10 @@
     <link rel="stylesheet" href="css/style.css" />
     <script src="js/script.js"></script>
     <script src="js/jquery.js"></script>
+    <script src="js/howler.min.js"></script>
+    <script src="js/audio.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/channels.js"></script>
 
     <meta property="og:site_name" content="Onliine" />
 	<meta property="og:type" content="website" />
@@ -23,50 +27,56 @@
 </head>
 <body>
     <div class="splash">
-        <div>
+        <div class="warning">
+            <div class="warning-container">
+                <div class="text">
+                    <h2><div class="warn-icon">&#9888;&nbsp;</div>WARNING-HEALTH AND SAFETY</h3>
+                    <p class="desc">
+                        BEFORE PLAYING, READ YOUR OPERATIONS MANUAL
+                        FOR IMPORTANT INFORMATION ABOUT YOUR HEALTH
+                        AND SAFETY.
+                    </p>
+                    <p class="bottom">
+                        Also online at<br>
+                        <a>www.nintendo.com/healthsafety</a>
+                    </p>
+                </div>
+
+                <span>Press left click to continue.</span>
+            </div>
+        </div>
+        <script>
+            // If location includes the "skipwarn" thingy, then skip the warning screen
+            if (document.location.search.includes('skipwarn')) {
+                startup('skipwarn');
+            // Else, show the regular warning scene
+            } else {
+                // Wait for the "Press left click" thingy to appear 'cuz that's how the Wii menu works (i think)
+                setTimeout(() => {
+                    document.querySelector('.splash .warning').addEventListener('click', startup, true);
+                }, 3000);
+            }
+        </script>
+
+        <div class="loading disabled">
             <img src="assets/return.gif" class="channels" />
             <span class="tip"><strong>PRO TIP:</strong>&nbsp;Right-click to open the Wii pause menu</span>
         </div>
     </div>
 
-    <div class="main-menu">
+    <div class="main-menu disabled">
         <div class="grid">
             <div class="prev">
                 <img src="assets/prev-default.png" class="def" />
                 <img src="assets/prev-hover.png" class="hover" />
             </div>
             <div class="ch-c">
-                <div class="ch occupied" data-id="disc">
-                    <img src="channelart/disc/disc.png" class="spinnin" />
-                    <iframe src=""></iframe>
-                    <div class="onhover" onmouseover="hover()" onclick="zip()"></div>
-                    <span class="tag" id="discTag">Disc Channel</span>
-                </div>
-                <div class="ch occupied" data-id="mii">
-                    <iframe src=""></iframe>
-                    <div class="onhover" onmouseover="hover()" onclick="zip()"></div>
-                    <span class="tag">Mii Channel</span>
-                </div>
-                <div class="ch occupied" data-id="photo">
-                    <iframe src=""></iframe>
-                    <div class="onhover" onmouseover="hover()" onclick="zip()"></div>
-                    <span class="tag">Photo Channel</span>
-                </div>
-                <div class="ch occupied" data-id="shop" data-href="/shop">
-                    <iframe src=""></iframe>
-                    <div class="onhover" onmouseover="hover()" onclick="zip()"></div>
-                    <span class="tag">Wii Shop Channel</span>
-                </div>
-                <div class="ch occupied" data-id="news">
-                    <iframe src=""></iframe>
-                    <div class="onhover" onmouseover="hover()" onclick="zip()"></div>
-                    <span class="tag">News Channel</span>
-                </div>
-                <div class="ch occupied" data-id="onliine" data-href="//github.com/Ascript89/onliine">
-                    <iframe src=""></iframe>
-                    <div class="onhover" onmouseover="hover()" onclick="zip()"></div>
-                    <span class="tag">Onliine Channel</span>
-                </div>
+                <div class="ch blank"></div>
+                <div class="ch blank"></div>
+                <div class="ch blank"></div>
+                <div class="ch blank"></div>
+                <div class="ch blank"></div>
+                <div class="ch blank"></div>
                 <div class="ch blank"></div>
                 <div class="ch blank"></div>
                 <div class="ch blank"></div>
@@ -97,7 +107,7 @@
         <div class="bottom-bar">
             <div class="lateral left">
                 <img src="assets/left-button.png" class="left-btn" />
-                <img src="assets/wii-button.png" class="wii-btn buttonlike" onclick="startAudio()" />
+                <img src="assets/wii-button.png" class="wii-btn buttonlike" onclick="playSFX('button-select-big.mp3', userConfig.sfxVol)" />
                 <span class="tag">Wii Settings</span>
             </div>
             <div class="info">
@@ -107,7 +117,7 @@
             </div>
             <div class="lateral right">
                 <img src="assets/right-button.png" class="right-btn" />
-                <img src="assets/mail-button.png" class="diary-btn buttonlike" onclick="startAudio()" />
+                <img src="assets/mail-button.png" class="diary-btn buttonlike" onclick="playSFX('button-select-big.mp3', userConfig.sfxVol)" />
                 <span class="tag">Wii Message Board</span>
             </div>
         </div>
@@ -115,7 +125,7 @@
 
     <div class="msgboard">
         <div class="bg"></div>
-        <div class="card buttonlike" onclick="letterIn()">
+        <div class="card buttonlike" onclick="playSFX('letter-in.mp3', userConfig.sfxVol)">
             <img src="assets/petermiiffin-head.png" class="mii" /><br>
             <span>Hello Lois</span>
         </div>
@@ -128,13 +138,13 @@
                     <span>with multiple lines.</span>
                 </div>
             </div>
-            <a class="alt-btn back">Back</a>
+            <a class="alt-btn back" onmouseover="playSFX('button-hover.mp3', userConfig.sfxVol)">Back</a>
         </div>
         <div class="bottom">
             <span id="date2"></span>
             <div class="lateral">
                 <img src="assets/right-button.png" class="right-btn" />
-                <img src="assets/backtomenu.png" class="back-btn backtowiimenu buttonlike" />
+                <img src="assets/backtomenu.png" class="back-btn backtowiimenu buttonlike" onclick="playSFX('button-select-big.mp3', userConfig.sfxVol)" />
                 <span class="tag">Wii Menu</span>
             </div>
         </div>
@@ -145,8 +155,8 @@
             <div class="tl"></div><div class="tr"></div><div class="bl"></div><div class="br"></div>
             <img id="videoSpec" src="" />
             <div class="buttons">
-                <a class="buttonlike" onclick="menuReturn()">Wii Menu</a>
-                <a class="buttonlike letsago" onclick="start()">Start</a>
+                <a class="buttonlike" onmouseover="playSFX('button-hover.mp3', userConfig.sfxVol)" onclick="menuReturn()">Wii Menu</a>
+                <a class="buttonlike letsago" onmouseover="playSFX('button-hover.mp3', userConfig.sfxVol)" onclick="start()">Start</a>
             </div>
         </div>
     </div>
@@ -157,7 +167,7 @@
             <img src="assets/home-close.png" />
         </div>
         <div class="in-between">
-            <a class="buttonlike backtomenu">Wii Menu</a>
+            <a class="buttonlike backtomenu" onmouseover="playSFX('button-hover.mp3', userConfig.sfxVol)">Wii Menu</a>
             <!-- <a class="buttonlike" onclick="window.location.reload()">Reset</a> -->
         </div>
         <div class="bar-bottom">
@@ -193,8 +203,8 @@
                 (Anything not saved will be lost.)
             </div>
             <div class="actions">
-                <a onclick="rm2();">Yes</a>
-                <a class="closedialog">No</a>
+                <a onclick="rm2();" onmouseover="playSFX('button-hover.mp3', userConfig.sfxVol)">Yes</a>
+                <a class="closedialog" onmouseover="playSFX('button-hover.mp3', userConfig.sfxVol)" onclick="playSFX('button-cancel.mp3', userConfig.sfxVol)">No</a>
             </div>
         </div>
     </div>
@@ -205,42 +215,31 @@
                 <img src="assets/wii-logo.svg" />
             </div>
             <div class="cells">
-                <a class="info buttonlike" href="/credits" target="_blank"></a>
-                <a class="stngs buttonlike" href="/settings"></a>
+                <a class="info buttonlike" href="/credits" onmouseover="playSFX('button-hover.mp3', userConfig.sfxVol)" target="_blank"></a>
+                <a class="stngs buttonlike" href="/settings" onmouseover="playSFX('button-hover.mp3', userConfig.sfxVol)"></a>
             </div>
             <div class="bottombar">
-                <a class="alt-btn close">Back</a>
+                <a class="alt-btn close" onmouseover="playSFX('button-hover.mp3', userConfig.sfxVol)">Back</a>
             </div>
         </div>
     </div>
 
     <div class="ui-sfx">
-        <audio id="startup" src="audio/startup.mp3"></audio>
-        <audio id="bg-music" src="audio/bg-music.mp3" loop></audio>
-        <audio id="hover" src="audio/button-hover.mp3"></audio>
-        <audio id="select" src="audio/button-select.mp3"></audio>
-        <audio id="zip" src="audio/zip.mp3"></audio>
-        <audio id="back" src="audio/back.mp3"></audio>
-        <audio id="start" src="audio/start.mp3"></audio>
         <audio id="chSpec" src=""></audio>
-        <audio id="homeIn" src="audio/home-in.mp3"></audio>
-        <audio id="homeOut" src="audio/home-out.mp3"></audio>
-        <audio id="rm1" src="audio/returntomenu-1.mp3"></audio>
-        <audio id="rm2" src="audio/returntomenu-2.mp3"></audio>
-        <audio id="nextprev" src="audio/nextprev.mp3"></audio>
-        <audio id="letterIn" src="audio/letter-in.mp3"></audio>
     </div>
 
     <script>
+        // ## This is done in 'channels.js' now
         // CHANNEL ART LOAD
-        $(document).ready(function() {
-            $('.ch.occupied').each(function() {
-                var artsrc = 'channelart/' + $(this).data('id') + '/channel.html';
-                $(this).find('iframe').attr('src', artsrc);
-            });
-        });
+        // $(document).ready(function() {
+        //     $('.ch.occupied').each(function() {
+        //         var artsrc = 'channelart/' + $(this).data('id') + '/channel.html';
+        //         $(this).find('iframe').attr('src', artsrc);
+        //     });
+        // });
 
         // CLICKS ON CHANNEL
+        // Transition
         $(".main-menu").on("click", ".occupied .onhover", function() {
             var centerX = $(this).offset().left + $(this).width() / 2;
             var centerY = $(this).offset().top + $(this).height() / 2;
@@ -248,20 +247,41 @@
             $(".ch-selection").css({"transform-origin" : centerX + "px " + centerY + "px 0" });
             $(".main-menu").addClass('ch-trans-on');
         });
-        
+        // Add music
         $(document).on("click", ".occupied", function() {
-            console.log($(this).data('id'));
+            console.log(`current channel:`, $(this).data('id'));
+            // Get channel from channel confg to find assets folder
+            var targetChannel = null;
+            for (let i = 0; i < userChannels.length; i++) {
+                const element = userChannels[i];
+                
+                if (element.id == $(this).data('id')) {
+                    targetChannel = element;
+                }
+            }
+            // If somehow the directory isn't found
+            if (targetChannel == null) {
+                alert(`The '${$(this).data('id')}' channel couldn't be found in the channel config!`)
+            }
 
-            var audiosrc = 'assets/channels/' + $(this).data('id') + '/audio.mp3';
+            // Audio
+            var audiosrc = targetChannel.assets + $(this).data('id') + '/audio.mp3';
             $("#chSpec").attr('src', audiosrc);
-
-            var videosrc = 'assets/channels/' + $(this).data('id') + '/video.gif';
+            // Video
+            // If this channel has a "videoformat"
+            var vformat = 'gif';
+            if (targetChannel.videoformat) {
+                vformat = targetChannel.videoformat
+            }
+            var videosrc = targetChannel.assets + $(this).data('id') + `/video.${vformat}`;
             $("#videoSpec").attr('src', videosrc);
 
+            // Start channel music
             $("#chSpec")[0].currentTime = 0;
             var currentaudio = document.getElementById("chSpec");
             currentaudio.play();
 
+            // Move into channel
             $(".letsago").attr('data-start', $(this).data('href'));
             if ($(this).attr("data-href")) {
                 $(".letsago").attr('data-start', $(this).data('href'));
@@ -273,8 +293,8 @@
 
         // CHANNEL START
         function start() {
-            var audio = document.getElementById("start");
-            audio.volume = 0.4; audio.play();
+            playSFX('button-select-big.mp3', userConfig.sfxVol);
+            
             if ($(".letsago").attr("data-start")) {
                 setTimeout(() => {document.body.classList.add("fadeOut");}, 1000);
                 setTimeout(() => {window.location.href = $(".letsago").data("start");}, 2000);
@@ -311,19 +331,21 @@
             $(".main-menu").removeClass('ch-trans-on');
             $(".main-menu").addClass('chsout-anim');
             setTimeout(() => {$(".main-menu").removeClass('chsout-anim');}, 1000);
-            select(); back(); bgmus();
+
+            playSFXMulti(0.2, ['button-select.mp3', 'channel-back.mp3']);
+            bgMusicToggle();
         }
 
         //PAGE PREV/NEXT
         $('.prev').on('click', function() {
-            nextprev();
+            playSFX('nextprev.mp3', userConfig.sfxVol);
             $('.grid').animate({ scrollLeft: '-=' + $('.grid').width() }, 0);
             $(".prev").css("display", "none");
             $(".next").css("display", "flex");
         });
 
         $('.next').on('click', function() {
-            nextprev();
+            playSFX('nextprev.mp3', userConfig.sfxVol);
             $('.grid').animate({ scrollLeft: '+=' + $('.grid').width() }, 0);
             $(".next").css("display", "none");
             $(".prev").css("display", "flex");
@@ -333,9 +355,12 @@
         // HOME/PAUSE MENU
         if (document.addEventListener) {
             document.addEventListener('contextmenu', function(e) {
-                bgmusPause(); homeIn();
-                $(".home-menu").css("display", "grid");
                 e.preventDefault();
+                if ($('.home-menu')[0].ariaLabel !== 'on') {
+                    bgMusicToggle(); playSFX(`home-in.mp3`, userConfig.sfxVol);
+                    $(".home-menu").css("display", "grid");
+                    $('.home-menu')[0].ariaLabel = 'on';
+                }
             }, false);
         }
         else {
@@ -351,12 +376,14 @@
                 $(".home-menu").css("display", "none");
                 $(".home-menu").removeClass("fadeOut");
             }, 250);
-            bgmus(); homeOut();
+            playSFX('button-cancel.mp3', userConfig.sfxVol);
+            bgMusicToggle();
+            $('.home-menu')[0].ariaLabel = null;
         });
 
         $(".backtomenu").click(event => {
             $(".returndialog").css("display", "flex");
-            rm1();
+            playSFX('button-select-big.mp3', userConfig.sfxVol);
         });
 
         $(".closedialog").click(event => {
